@@ -1,0 +1,5 @@
+const Post = ({post}) => {
+  return (
+    
+  )
+}

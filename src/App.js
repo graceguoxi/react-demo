@@ -1,24 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import MuiTable from "./components/MuiTable";
+import { AppBar, Toolbar, Typography } from "@mui/material"
+import ProductPage from "./components/ProductPage";
+import StickyHeadTable from "./Table";
+import SearchAppBar from './components/SearchAppBar'
+import SortTable from './components/SortTable'
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getPosts } from './api/axios' 
+
 
 function App() {
+  const [posts, setPosts] = useState([])
+  const [searchResults, setSearchResults] = useState('')
+ 
+// useEffect(() => {
+//   getPosts().then(json => {
+//     setPosts(json)
+//     return json
+//   }).then(json => {
+//     setSearchResults(json)
+//   })
+// }, [])
+
+useEffect(() => {
+  axios.get('https://app.spiritx.co.nz/api/products')
+    .then(res => {
+      const posts = res.data
+      posts.map(post => post.price = parseInt(post.price))
+      console.log('posts',posts)
+      setPosts(posts)
+    })
+    .catch(err => console.log(err))
+}, [])
+
+
+// React.useEffect(() => {
+//   axios.get('https://app.spiritx.co.nz/api/products')
+//     .then(res => {
+//       const data = res.data
+//       data.map(prod => prod.price = parseInt(prod.price))
+//       console.log(data)
+//       setProducts(data)
+//     })
+//     .catch(err => console.log(err))
+// }, [])
+ 
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* MUI Doc Example */}
+      {/* <StickyHeadTable /> */}
+
+      {/* <ProductPage /> */}
+      
+      <SearchAppBar posts={posts} setSearchResults={setSearchResults} />
+      
+      <main>
+        {/* <MuiTable /> */}
+        <SortTable searchResults={searchResults} />
+      </main>
+    </>
+      
   );
 }
 
