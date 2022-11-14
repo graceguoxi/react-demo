@@ -1,7 +1,6 @@
 import * as React from 'react';
 import axios from 'axios'
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,18 +10,13 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,10 +61,9 @@ const headCells = [
     label: 'Image',
   }
 ];
- 
+
 function EnhancedTableHead(props) {
-  const { order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const { order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -112,7 +105,8 @@ EnhancedTableHead.propTypes = {
 };
 
 
-export default function EnhancedTable({ searchResults }) {
+export default function EnhancedTable({ searchKeyWord }) {
+  const [oriData, setOriData] = React.useState([])
   const [products, setProducts] = React.useState([])
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('');
@@ -120,10 +114,10 @@ export default function EnhancedTable({ searchResults }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  React.useEffect(() => {
-    console.log('order: ', order)
-    console.log('page: ', page)
-  })
+  // React.useEffect(() => {
+  //   console.log('order: ', order)
+  //   console.log('page: ', page)
+  // })
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -170,8 +164,6 @@ export default function EnhancedTable({ searchResults }) {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
@@ -181,88 +173,92 @@ export default function EnhancedTable({ searchResults }) {
       .then(res => {
         const data = res.data
         data.map(prod => prod.price = parseInt(prod.price))
-        console.log(data)
+        setOriData(data)
         setProducts(data)
       })
       .catch(err => console.log(err))
   }, [])
 
   React.useEffect(() => {
-    console.log(products[0])
-  }, [products])
-
-  React.useEffect(() => {
-    console.log('searchResults', searchResults)
-  }, [searchResults])
-
-  const content = searchResults?.length ? searchResults : <article><p> No Matching Posts</p></article>
-  
+    console.log(searchKeyWord)
+    setProducts(oriData.filter(product => {
+      if (searchKeyWord === '') {
+        return product
+      }
+      if (product.title.includes(searchKeyWord) || product.description.includes(searchKeyWord)) {
+        return product
+      }
+    }))
+  }, [searchKeyWord])
 
   return (
-    <Box sx={{ width: '88%',padding:'0 100px 0 100px' }}>
+    <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={products.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.sort(getComparator(order, orderBy)).slice() */}
-              {products.sort(getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((post, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, post.title)}
-                      tabIndex={-1}
-                      key={post.id}
-                    >
-                      <TableCell
-                        component="th"
-                        id={post.id}
-                        scope="row"
-                        padding="none"
-                        align="center"
+        { products.length > 0 &&
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={'medium'}
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={products.length}
+              />
+              <TableBody>
+                { products.sort(getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((content, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, content.title)}
+                        tabIndex={-1}
+                        key={content.id}
                       >
-                        {post.title}
-                      </TableCell>
-                      <TableCell align="center">{post.description}</TableCell>
-                      <TableCell align="center">{post.price}</TableCell>
-                      <TableCell align="center">{post.product_image}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{height: 53 * emptyRows}}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={products.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+                        <TableCell
+                          component="th"
+                          id={content.id}
+                          scope="row"
+                          padding="none"
+                          align="center"
+                        >
+                          {content.title}
+                        </TableCell>
+                        <TableCell align="center">{content.description}</TableCell>
+                        <TableCell align="center">{content.price}</TableCell>
+                        <TableCell align="center">{content.product_image}</TableCell>
+                      </TableRow>
+                    )
+                  })
+                }
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{ height: 53 * emptyRows }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={products.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
+        }
+        {
+          products.length === 0 && <div>Nothing</div>
+        }
       </Paper>
     </Box>
-  );
+  )
 }

@@ -8,60 +8,22 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { getPosts } from './api/axios' 
 
-
 function App() {
-  const [posts, setPosts] = useState([])
-  const [searchResults, setSearchResults] = useState('')
- 
-// useEffect(() => {
-//   getPosts().then(json => {
-//     setPosts(json)
-//     return json
-//   }).then(json => {
-//     setSearchResults(json)
-//   })
-// }, [])
+  const [searchKeyWord, setSearchKeyWord] = useState('')
+  const [origPosts, setOrigPosts] = useState([])
 
-useEffect(() => {
-  axios.get('https://app.spiritx.co.nz/api/products')
-    .then(res => {
-      const posts = res.data
-      posts.map(post => post.price = parseInt(post.price))
-      console.log('posts',posts)
-      setPosts(posts)
-    })
-    .catch(err => console.log(err))
-}, [])
-
-
-// React.useEffect(() => {
-//   axios.get('https://app.spiritx.co.nz/api/products')
-//     .then(res => {
-//       const data = res.data
-//       data.map(prod => prod.price = parseInt(prod.price))
-//       console.log(data)
-//       setProducts(data)
-//     })
-//     .catch(err => console.log(err))
-// }, [])
- 
-  
   return (
     <>
+      <SearchAppBar posts={origPosts} onSearch={setSearchKeyWord} />
       {/* MUI Doc Example */}
       {/* <StickyHeadTable /> */}
-
       {/* <ProductPage /> */}
       
-      <SearchAppBar posts={posts} setSearchResults={setSearchResults} />
-      
       <main>
-        {/* <MuiTable /> */}
-        <SortTable searchResults={searchResults} />
+        <SortTable searchKeyWord={searchKeyWord} />
       </main>
     </>
-      
-  );
+  )
 }
 
 export default App;
