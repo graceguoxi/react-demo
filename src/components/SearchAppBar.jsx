@@ -51,14 +51,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar({ posts, setSearchResults }) {
-
-  // const handleSubmit = (e) => e.preventDefault()
-  const handleSearchChange = (e) => {
-    if(!e.target.value) return setSearchResults(posts)
-    const resultsArray = posts.filter(post => post.title.includes(e.target.value) || post.description.includes(e.target.value))
-    setSearchResults(resultsArray)
-  }
+export default function SearchAppBar({ onSearch }) {
+  const handleSearchChange = e => onSearch(e.target.value)
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -81,7 +75,7 @@ export default function SearchAppBar({ posts, setSearchResults }) {
           >
             Product Management
           </Typography>
-          <form >
+          <form>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
