@@ -51,8 +51,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar({ onSearch }) {
+export default function SearchAppBar({ keyWord, onSearch }) {
   const handleSearchChange = e => onSearch(e.target.value)
+
+  const handleKeyUp = e => e.keyCode == 27 && onSearch('')
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -81,9 +83,11 @@ export default function SearchAppBar({ onSearch }) {
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
+                value={keyWord}
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={handleSearchChange}
+                onKeyUp={handleKeyUp}
               />
           </Search>
           </form>

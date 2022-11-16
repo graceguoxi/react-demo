@@ -1,5 +1,0 @@
-const Post = ({post}) => {
-  return (
-    
-  )
-}

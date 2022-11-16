@@ -126,15 +126,6 @@ export default function EnhancedTable({ searchKeyWord }) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = products.map((n) => n.name);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -211,26 +202,26 @@ export default function EnhancedTable({ searchKeyWord }) {
               <TableBody>
                 { products.sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((content, index) => {
+                  .map((product, index) => {
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, content.title)}
+                        onClick={(event) => handleClick(event, product.title)}
                         tabIndex={-1}
-                        key={content.id}
+                        key={product.id}
                       >
                         <TableCell
                           component="th"
-                          id={content.id}
+                          id={product.id}
                           scope="row"
                           padding="none"
                           align="center"
                         >
-                          {content.title}
+                          {product.title}
                         </TableCell>
-                        <TableCell align="center">{content.description}</TableCell>
-                        <TableCell align="center">{content.price}</TableCell>
-                        <TableCell align="center">{content.product_image}</TableCell>
+                        <TableCell align="center">{product.description}</TableCell>
+                        <TableCell align="center">{product.price}</TableCell>
+                        <TableCell align="center">{product.product_image}</TableCell>
                       </TableRow>
                     )
                   })
@@ -256,7 +247,7 @@ export default function EnhancedTable({ searchKeyWord }) {
           </TableContainer>
         }
         {
-          products.length === 0 && <div>Nothing</div>
+          products.length === 0 && <div>No Matching result</div>
         }
       </Paper>
     </Box>
