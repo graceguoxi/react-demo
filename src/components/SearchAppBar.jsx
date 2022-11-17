@@ -3,11 +3,13 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
+import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -52,9 +54,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar({ keyWord, onSearch }) {
+  
   const handleSearchChange = e => onSearch(e.target.value)
 
   const handleKeyUp = e => e.keyCode == 27 && onSearch('')
+  const handleClear = () => {
+    onSearch('')
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -89,6 +95,9 @@ export default function SearchAppBar({ keyWord, onSearch }) {
                 onChange={handleSearchChange}
                 onKeyUp={handleKeyUp}
               />
+              <IconButton onClick={handleClear} sx={{ visibility: keyWord? "visible" : "hidden"}}>
+                <ClearIcon />
+              </IconButton>
           </Search>
           </form>
         </Toolbar>
