@@ -6,6 +6,8 @@ import SearchAppBar from './components/SearchAppBar'
 import SortTable from './components/SortTable'
 import { Details } from '@mui/icons-material'
 
+
+
 function App() {
   const [searchKeyWord, setSearchKeyWord] = useState('')
 
@@ -24,7 +26,7 @@ function App() {
 
   return (
     <>
-      <SearchAppBar keyWord={searchKeyWord} onSearch={setSearchKeyWord} />
+      <SearchAppBar keyWord={searchKeyWord} onSearch={setSearchKeyWord} auth={auth} logout={logout} user={user} />
 
       <main>
         <Router>
@@ -38,13 +40,6 @@ function App() {
             <Route path='login' element={auth ? <Navigate to='/' /> : <Login />} />
           </Routes>
         </Router>
-        
-        {
-          auth && <button onClick={logout}>Log out</button>
-        }
-        {
-          user.email
-        }
       </main>
     </>
   )

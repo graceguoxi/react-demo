@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { Avatar, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
@@ -53,7 +55,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar({ keyWord, onSearch }) {
+export default function SearchAppBar({ keyWord, onSearch, auth, logout, user }) {
+
+   const [userLogout, setUserLogout] = React.useState('')
+
+   const handleChange = (event) => {
+     setUserLogout(event.target.value)
+   }
   
   const handleSearchChange = e => onSearch(e.target.value)
 
@@ -64,21 +72,38 @@ export default function SearchAppBar({ keyWord, onSearch }) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position='static'>
         <Toolbar>
           <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
+            size='large'
+            edge='start'
+            color='inherit'
+            aria-label='open drawer'
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <FormControl variant='standard' sx={{ m: 1, minWidth: 50 }}>
+              <InputLabel>
+                <AccountCircleIcon />
+              </InputLabel>
+              <Select
+                labelId='demo-simple-select-standard-label'
+                id='demo-simple-select-standard'
+                value={userLogout}
+                onChange={handleChange}
+              >
+                <MenuItem value=''>
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>{user.email}</MenuItem>
+                {auth && <MenuItem onClick={logout} value={20}>Log out</MenuItem>}
+                
+              </Select>
+            </FormControl>
           </IconButton>
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="div"
+            component='div'
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             Product Management
@@ -90,18 +115,18 @@ export default function SearchAppBar({ keyWord, onSearch }) {
               </SearchIconWrapper>
               <StyledInputBase
                 value={keyWord}
-                placeholder="Search…"
+                placeholder='Search…'
                 inputProps={{ 'aria-label': 'search' }}
                 onChange={handleSearchChange}
                 onKeyUp={handleKeyUp}
               />
-              <IconButton onClick={handleClear} sx={{ visibility: keyWord? "visible" : "hidden"}}>
+              <IconButton onClick={handleClear} sx={{ visibility: keyWord ? 'visible' : 'hidden' }}>
                 <ClearIcon />
               </IconButton>
-          </Search>
+            </Search>
           </form>
         </Toolbar>
       </AppBar>
     </Box>
-  );
+  )
 }

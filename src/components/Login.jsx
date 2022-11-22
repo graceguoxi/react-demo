@@ -15,12 +15,13 @@ const Login = () => {
     setInputs(prevState => ({
       ...prevState,
       [e.target.name] : e.target.value
-    })) 
+      
+    }))
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log(inputs)
+    console.log('inputs',inputs)
 
     axios.post('https://app.spiritx.co.nz/api/login', inputs)
       .then(res => {
