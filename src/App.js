@@ -26,7 +26,13 @@ function App() {
 
   return (
     <>
-      <SearchAppBar keyWord={searchKeyWord} onSearch={setSearchKeyWord} auth={auth} logout={logout} user={user} />
+      <SearchAppBar
+        keyWord={searchKeyWord}
+        onSearch={setSearchKeyWord}
+        auth={auth}
+        logout={logout}
+        user={user}
+      />
 
       <main>
         <Router>
@@ -36,8 +42,10 @@ function App() {
             ) : (
               <Route path='/' element={<Login />} />
             )}
+            <Route path='*' element={ <Navigate to='/' /> } />
+            {/* <Route path='*' element={ <h1>404</h1> } /> */}
 
-            <Route path='login' element={auth ? <Navigate to='/' /> : <Login />} />
+            {/* <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} /> */}
           </Routes>
         </Router>
       </main>
