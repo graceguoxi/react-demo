@@ -211,17 +211,21 @@ export default function EnhancedTable({ searchKeyWord }) {
                         key={product.id}
                       >
                         <TableCell
-                          component="th"
+                          component='th'
                           id={product.id}
-                          scope="row"
-                          padding="none"
-                          align="center"
+                          scope='row'
+                          padding='none'
+                          align='center'
                         >
                           {product.title}
                         </TableCell>
-                        <TableCell align="center">{product.description}</TableCell>
-                        <TableCell align="center">{product.price}</TableCell>
-                        <TableCell align="center">{product.product_image}</TableCell>
+                        <TableCell align='center'>{product.description}</TableCell>
+                        <TableCell align='center'>{product.price}</TableCell>
+                        <TableCell align='center'>
+                          <img
+                            src='{`https://app.spiritx.co.nz/storage/${product.product_image}`}'
+                          />
+                        </TableCell>
                       </TableRow>
                     )
                   })

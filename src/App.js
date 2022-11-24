@@ -6,8 +6,6 @@ import SearchAppBar from './components/SearchAppBar'
 import SortTable from './components/SortTable'
 import { Details } from '@mui/icons-material'
 
-
-
 function App() {
   const [searchKeyWord, setSearchKeyWord] = useState('')
 
@@ -15,41 +13,40 @@ function App() {
   let user = {}
   if (auth) {
     user = JSON.parse(localStorage.getItem('react-demo-user'))
-}
+  }
   const logout = () => {
     localStorage.removeItem('react-demo-token')
     localStorage.removeItem('react-demo-user')
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)
+    // setTimeout(() => {
+    window.location.reload()
+    // }, 2000)
   }
 
   return (
-    <>
-      <SearchAppBar
-        keyWord={searchKeyWord}
-        onSearch={setSearchKeyWord}
-        auth={auth}
-        logout={logout}
-        user={user}
-      />
+    <main>
+      <Router>
+        <SearchAppBar
+          keyWord={searchKeyWord}
+          onSearch={setSearchKeyWord}
+          auth={auth}
+          logout={logout}
+          user={user}
+        />
+        
+        <Routes>
+          {auth ? (
+            <Route path='/' element={<SortTable searchKeyWord={searchKeyWord} />} />
+          ) : (
+            <Route path='/login' element={<Login />} />
+          )}
+          {!auth && <Route path='/' element={<Navigate to='/login' />} />}
+          <Route path='*' element={<Navigate to='/' />} />
+          {/* <Route path='*' element={ <h1>404</h1> } /> */}
 
-      <main>
-        <Router>
-          <Routes>
-            {auth ? (
-              <Route path='/' element={<SortTable searchKeyWord={searchKeyWord} />} />
-            ) : (
-              <Route path='/' element={<Login />} />
-            )}
-            <Route path='*' element={ <Navigate to='/' /> } />
-            {/* <Route path='*' element={ <h1>404</h1> } /> */}
-
-            {/* <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} /> */}
-          </Routes>
-        </Router>
-      </main>
-    </>
+          <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} />
+        </Routes>
+      </Router>
+    </main>
   )
 }
 
