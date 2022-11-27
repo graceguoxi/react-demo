@@ -1,72 +1,80 @@
-import * as React from 'react';
+import * as React from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { visuallyHidden } from '@mui/utils';
+import PropTypes from 'prop-types'
+import Box from '@mui/material/Box'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TablePagination from '@mui/material/TablePagination'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import Typography from '@mui/material/Typography'
+import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp'
+import { visuallyHidden } from '@mui/utils'
+import CreateSharpIcon from '@mui/icons-material/CreateSharp'
+import { Avatar } from '@mui/material'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
-    return -1;
+    return -1
   }
   if (b[orderBy] > a[orderBy]) {
-    return 1;
+    return 1
   }
-  return 0;
+  return 0
 }
 
 function getComparator(order, orderBy) {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    : (a, b) => -descendingComparator(a, b, orderBy)
 }
-
 
 const headCells = [
   {
     id: 'title',
     numeric: false,
     disablePadding: true,
-    label: 'Title',
+    label: 'Title'
   },
   {
     id: 'description',
     numeric: true,
     disablePadding: false,
-    label: 'Description',
+    label: 'Description'
   },
   {
     id: 'price',
     numeric: true,
     disablePadding: false,
-    label: 'Price',
+    label: 'Price'
   },
   {
     id: 'product_image',
     numeric: true,
     disablePadding: false,
-    label: 'Image',
+    label: 'Image'
+  },
+  {
+    id: 'action',
+    numeric: true,
+    disablePadding: false,
+    label: 'Action'
   }
-];
+]
 
 function EnhancedTableHead(props) {
-  const { order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { order, orderBy, numSelected, rowCount, onRequestSort } = props
   const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+    onRequestSort(event, property)
+  }
 
   return (
     <TableHead>
@@ -84,7 +92,7 @@ function EnhancedTableHead(props) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+                <Box component='span' sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
@@ -93,7 +101,7 @@ function EnhancedTableHead(props) {
         ))}
       </TableRow>
     </TableHead>
-  );
+  )
 }
 
 EnhancedTableHead.propTypes = {
@@ -101,18 +109,17 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
+  rowCount: PropTypes.number.isRequired
+}
 
 export default function EnhancedTable({ searchKeyWord }) {
   const [oriData, setOriData] = React.useState([])
   const [products, setProducts] = React.useState([])
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = React.useState('asc')
+  const [orderBy, setOrderBy] = React.useState('')
+  const [selected, setSelected] = React.useState([])
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   // React.useEffect(() => {
   //   console.log('order: ', order)
@@ -120,78 +127,78 @@ export default function EnhancedTable({ searchKeyWord }) {
   // })
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
+    const isAsc = orderBy === property && order === 'asc'
     console.log('isAsc:', isAsc)
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    const selectedIndex = selected.indexOf(name)
+    let newSelected = []
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, name)
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
+      newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(selected.slice(0, -1))
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+        selected.slice(selectedIndex + 1)
+      )
     }
 
-    setSelected(newSelected);
-  };
+    setSelected(newSelected)
+  }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0
+
+  const avatarStyle = { backgroundColor: '#2149e4', color: 'white', margin: '0 10px' }
+  // const tableCell = { margin: '0 0 0 160' }
 
   React.useEffect(() => {
-    axios.get('https://app.spiritx.co.nz/api/products')
-      .then(res => {
+    axios
+      .get('https://app.spiritx.co.nz/api/products')
+      .then((res) => {
         const data = res.data
-        data.map(prod => prod.price = parseInt(prod.price))
+        data.map((prod) => (prod.price = parseInt(prod.price)))
         setOriData(data)
         setProducts(data)
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }, [])
 
   React.useEffect(() => {
     console.log(searchKeyWord)
-    setProducts(oriData.filter(product => {
-      if (searchKeyWord === '') {
-        return product
-      }
-      if (product.title.includes(searchKeyWord) || product.description.includes(searchKeyWord)) {
-        return product
-      }
-    }))
+    setProducts(
+      oriData.filter((product) => {
+        if (searchKeyWord === '') {
+          return product
+        }
+        if (product.title.includes(searchKeyWord) || product.description.includes(searchKeyWord)) {
+          return product
+        }
+      })
+    )
   }, [searchKeyWord])
 
   return (
     <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        { products.length > 0 &&
+        {products.length > 0 && (
           <TableContainer>
-            <Table
-              sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
-              size={'medium'}
-            >
+            <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={'medium'}>
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
@@ -200,7 +207,8 @@ export default function EnhancedTable({ searchKeyWord }) {
                 rowCount={products.length}
               />
               <TableBody>
-                { products.sort(getComparator(order, orderBy))
+                {products
+                  .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((product, index) => {
                     return (
@@ -211,7 +219,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                         key={product.id}
                       >
                         <TableCell
-                          component='th'
+                          // component='th'
                           id={product.id}
                           scope='row'
                           padding='none'
@@ -223,17 +231,24 @@ export default function EnhancedTable({ searchKeyWord }) {
                         <TableCell align='center'>{product.price}</TableCell>
                         <TableCell align='center'>
                           <img
-                            src='{`https://app.spiritx.co.nz/storage/${product.product_image}`}'
+                            src={`https://app.spiritx.co.nz/storage/${product.product_image}`}
+                            width='80'
+                            height='60'
                           />
+                        </TableCell>
+                        <TableCell align='center'>
+                          <IconButton variant='outlined' style={avatarStyle}>
+                            <CreateSharpIcon />
+                          </IconButton>
+                          <IconButton variant='outlined' style={avatarStyle}>
+                            <DeleteSharpIcon />
+                          </IconButton>
                         </TableCell>
                       </TableRow>
                     )
-                  })
-                }
+                  })}
                 {emptyRows > 0 && (
-                  <TableRow
-                    style={{ height: 53 * emptyRows }}
-                  >
+                  <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
@@ -241,7 +256,7 @@ export default function EnhancedTable({ searchKeyWord }) {
             </Table>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
-              component="div"
+              component='div'
               count={products.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -249,10 +264,8 @@ export default function EnhancedTable({ searchKeyWord }) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </TableContainer>
-        }
-        {
-          products.length === 0 && <div>No Matching result</div>
-        }
+        )}
+        {products.length === 0 && <div>No Matching result</div>}
       </Paper>
     </Box>
   )

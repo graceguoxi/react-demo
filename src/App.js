@@ -23,7 +23,7 @@ function App() {
   }
 
   return (
-    <main>
+    <>
       <Router>
         <SearchAppBar
           keyWord={searchKeyWord}
@@ -33,20 +33,22 @@ function App() {
           user={user}
         />
         
-        <Routes>
-          {auth ? (
-            <Route path='/' element={<SortTable searchKeyWord={searchKeyWord} />} />
-          ) : (
-            <Route path='/login' element={<Login />} />
-          )}
-          {!auth && <Route path='/' element={<Navigate to='/login' />} />}
-          <Route path='*' element={<Navigate to='/' />} />
-          {/* <Route path='*' element={ <h1>404</h1> } /> */}
-
-          <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} />
-        </Routes>
+        <main>
+          <Routes>
+            {auth ? (
+              <Route path='/' element={<SortTable searchKeyWord={searchKeyWord} />} />
+            ) : (
+              <Route path='/login' element={<Login />} />
+            )}
+            {!auth && <Route path='/' element={<Navigate to='/login' />} />}
+            <Route path='*' element={<Navigate to='/' />} />
+            {/* <Route path='*' element={ <h1>404</h1> } /> */}
+  
+            <Route path='/login' element={auth ? <Navigate to='/' /> : <Login />} />
+          </Routes>
+        </main>
       </Router>
-    </main>
+    </>
   )
 }
 
