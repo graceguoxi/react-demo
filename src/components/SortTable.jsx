@@ -20,6 +20,8 @@ import DeleteSharpIcon from '@mui/icons-material/DeleteSharp'
 import { visuallyHidden } from '@mui/utils'
 import CreateSharpIcon from '@mui/icons-material/CreateSharp'
 import { Avatar } from '@mui/material'
+import EditableRow from './TableComponents/EditableRow'
+import { useState } from 'react'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -120,6 +122,12 @@ export default function EnhancedTable({ searchKeyWord }) {
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [editProductId, setEditProductId] = React.useState(null)
+  const [editFormData, setEditFormData] = useState({
+    title: "",
+    description: "",
+    price: ""
+  })
 
   // React.useEffect(() => {
   //   console.log('order: ', order)
@@ -167,6 +175,33 @@ export default function EnhancedTable({ searchKeyWord }) {
   const avatarStyle = { backgroundColor: '#2149e4', color: 'white', margin: '0 10px' }
   // const tableCell = { margin: '0 0 0 160' }
 
+  
+  const handleEditFormChange = (e) => {
+    e.preventDefault();
+
+    const fieldName = e.target.getAttribute("lable")
+    const fieldValue = e.target.value
+
+    const newFormData = {...editFormData}
+    newFormData[fieldName] = fieldValue
+
+    setEditFormData(newFormData)
+  }
+
+   const handleEditClick = (event, product) => {
+     event.preventDefault()
+     setEditProductId(product.id)
+
+     const formValues = {
+       title: product.title,
+       description: product.description,
+       price: product.price
+     }
+
+     setEditFormData(formValues)
+   }
+  
+
   React.useEffect(() => {
     axios
       .get('https://app.spiritx.co.nz/api/products')
@@ -198,62 +233,77 @@ export default function EnhancedTable({ searchKeyWord }) {
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
           <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={'medium'}>
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-                rowCount={products.length}
-              />
-              <TableBody>
-                {products
-                  .sort(getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((product, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, product.title)}
-                        tabIndex={-1}
-                        key={product.id}
-                      >
-                        <TableCell
-                          // component='th'
-                          id={product.id}
-                          scope='row'
-                          padding='none'
-                          align='center'
-                        >
-                          {product.title}
-                        </TableCell>
-                        <TableCell align='center'>{product.description}</TableCell>
-                        <TableCell align='center'>{product.price}</TableCell>
-                        <TableCell align='center'>
-                          <img
-                            src={`https://app.spiritx.co.nz/storage/${product.product_image}`}
-                            width='80'
-                            height='60'
-                          />
-                        </TableCell>
-                        <TableCell align='center'>
-                          <IconButton variant='outlined' style={avatarStyle}>
-                            <CreateSharpIcon />
-                          </IconButton>
-                          <IconButton variant='outlined' style={avatarStyle}>
-                            <DeleteSharpIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <form>
+              <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={'medium'}>
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={products.length}
+                />
+                <TableBody>
+                  {products
+                    .sort(getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((product, index) => {
+                      return (
+                        <>
+                          {editProductId == product.id ? (
+                            <EditableRow
+                              editFormData={editFormData}
+                              handleEditFormChange={handleEditFormChange}
+                            />
+                          ) : (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, product.title)}
+                              tabIndex={-1}
+                              key={product.id}
+                            >
+                              <TableCell
+                                // component='th'
+                                id={product.id}
+                                scope='row'
+                                padding='none'
+                                align='center'
+                              >
+                                {product.title}
+                              </TableCell>
+                              <TableCell align='center'>{product.description}</TableCell>
+                              <TableCell align='center'>{product.price}</TableCell>
+                              <TableCell align='center'>
+                                <img
+                                  src={`https://app.spiritx.co.nz/storage/${product.product_image}`}
+                                  width='80'
+                                  height='60'
+                                />
+                              </TableCell>
+                              <TableCell align='center'>
+                                <IconButton
+                                  variant='outlined'
+                                  style={avatarStyle}
+                                  onClick={(event) => handleEditClick(event, product)}
+                                >
+                                  <CreateSharpIcon />
+                                </IconButton>
+                                <IconButton variant='outlined' style={avatarStyle}>
+                                  <DeleteSharpIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      )
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </form>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component='div'
