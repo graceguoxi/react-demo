@@ -200,6 +200,35 @@ export default function EnhancedTable({ searchKeyWord }) {
 
      setEditFormData(formValues)
    }
+
+   const handleEditFormSubmit = (e) => {
+     e.preventDefault()
+
+     const editedProduct = {
+       id: editProductId, 
+       title: editFormData.title,
+       description: editFormData.description,
+       price: editFormData.price
+     }
+
+     const newProducts = [...products]
+     const index = products.findIndex((product) => product.id === editProductId)
+
+     newProducts[index] = editedProduct
+     setProducts(newProducts)
+     setEditProductId(null)
+   }
+
+   const handleCancelClick = () => {
+    setEditProductId(null)
+   }
+
+   const handleDeleteClick = (productId) => {
+     const newProducts = [...products]
+     const index = products.findIndex((product) => product.id === productId )
+     newProducts.splice(index, 1)
+     setProducts(newProducts)
+   }
   
 
   React.useEffect(() => {
@@ -233,7 +262,7 @@ export default function EnhancedTable({ searchKeyWord }) {
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
           <TableContainer>
-            <form>
+            <form onSubmit={handleEditFormSubmit}>
               <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={'medium'}>
                 <EnhancedTableHead
                   numSelected={selected.length}
@@ -253,6 +282,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                             <EditableRow
                               editFormData={editFormData}
                               handleEditFormChange={handleEditFormChange}
+                              handleCancelClick={handleCancelClick}
                             />
                           ) : (
                             <TableRow
@@ -287,7 +317,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                                 >
                                   <CreateSharpIcon />
                                 </IconButton>
-                                <IconButton variant='outlined' style={avatarStyle}>
+                                <IconButton variant='outlined' style={avatarStyle} onClick={() => handleDeleteClick(product.id)}>
                                   <DeleteSharpIcon />
                                 </IconButton>
                               </TableCell>
