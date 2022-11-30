@@ -1,37 +1,38 @@
-import { IconButton, OutlinedInput, TableCell, TableRow } from '@mui/material'
+import { IconButton, OutlinedInput, TableCell, TableRow, TextField } from '@mui/material'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 
-const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) => {
+const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick, handleSubmit }) => {
+  console.log(editFormData)
   return (
     <TableRow>
       <TableCell align='center'>
-        <OutlinedInput
+        <TextField
           type='text'
-          required='required'
-          label='title'
-          value={editFormData.title}
+          required={true}
+          name='title'
+          defaultValue={editFormData.title}
           onChange={handleEditFormChange}
-        ></OutlinedInput>
+        ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <OutlinedInput
+        <TextField
           type='text'
-          required='required'
-          label='description'
-          value={editFormData.description}
+          required={true}
+          name='description'
+          defaultValue={editFormData.description}
           onChange={handleEditFormChange}
-        ></OutlinedInput>
+        ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <OutlinedInput
-          type='text'
-          required='required'
-          label='price'
-          value={editFormData.price}
+        <TextField
+          type='number'
+          required={true}
+          name='price'
+          defaultValue={editFormData.price}
           onChange={handleEditFormChange}
-        ></OutlinedInput>
+        ></TextField>
       </TableCell>
       <TableCell align='center'>
         <IconButton color='primary' aria-label='upload picture' component='label'>
@@ -40,7 +41,7 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit'>
+        <IconButton type='submit' onClick={handleSubmit}>
           <CheckIcon fontSize='large' color='primary' />
         </IconButton>
         <IconButton type='button' onClick={handleCancelClick}>
