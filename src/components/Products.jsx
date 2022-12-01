@@ -20,8 +20,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp'
 import { visuallyHidden } from '@mui/utils'
 import CreateSharpIcon from '@mui/icons-material/CreateSharp'
-import { Avatar } from '@mui/material'
+import { Avatar, Button } from '@mui/material'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
 import EditableRow from './TableComponents/EditableRow'
+import AddRow from './TableComponents/AddRow'
 import { useState } from 'react'
 
 function descendingComparator(a, b, orderBy) {
@@ -48,6 +51,7 @@ export default function EnhancedTable({ searchKeyWord }) {
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [onAdd, setOnAdd] = useState(false)
   const [editProductId, setEditProductId] = React.useState(null)
   const [editFormData, setEditFormData] = useState({
     id: '',
@@ -95,6 +99,8 @@ export default function EnhancedTable({ searchKeyWord }) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0
 
   const avatarStyle = { backgroundColor: '#2149e4', color: 'white', margin: '0 10px' }
+
+  const add = () => setOnAdd(!onAdd)
 
   const handleEditFormChange = (e) => {
     e.preventDefault()
@@ -182,6 +188,9 @@ export default function EnhancedTable({ searchKeyWord }) {
 
   return (
     <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
+      <Button variant='text'>
+        <AddCircleIcon onClick={() => add()} fontSize='large' />
+      </Button>
       <TableHead />
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
@@ -195,6 +204,10 @@ export default function EnhancedTable({ searchKeyWord }) {
                 rowCount={products.length}
               />
               <TableBody>
+                {onAdd && (
+                  <AddRow products={products} setProducts={setProducts} setOnAdd={setOnAdd} />
+                )}
+
                 {products
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
