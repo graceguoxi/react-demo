@@ -140,7 +140,7 @@ export default function EnhancedTable({ searchKeyWord }) {
     setProducts(newProducts)
   }
 
-  const onSumbit = () => {
+  const onSubmit = () => {
     const userToken = localStorage.getItem('react-demo-token')
     const config = {
       headers: {
@@ -202,6 +202,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                 orderBy={orderBy}
                 onRequestSort={handleRequestSort}
                 rowCount={products.length}
+                setEditProductId={setEditProductId}
               />
               <TableBody>
                 {onAdd && (
@@ -220,7 +221,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                             editFormData={editFormData}
                             handleEditFormChange={handleEditFormChange}
                             handleCancelClick={handleCancelClick}
-                            handleSubmit={onSumbit}
+                            handleSubmit={onSubmit}
                           />
                         ) : (
                           <TableRow

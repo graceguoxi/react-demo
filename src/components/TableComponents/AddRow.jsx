@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid'
 import { Form } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import axios from 'axios'
 
 const AddRow = ({ products, setProducts, setOnAdd }) => {
   const [addFormData, setAddFormData] = useState({
@@ -47,6 +48,26 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
   }
   // console.log('new', products)
 
+  const onAddSubmit = () => {
+    const userToken = localStorage.getItem('react-demo-token')
+    const config = {
+      headers: {
+        token: userToken
+      }
+    }
+    console.log('token', userToken)
+
+    axios
+      .post('https://app.spiritx.co.nz/api/products', { ...addFormData, category_id: 55 }, config)
+      .then((res) => {
+        const newProductsData = [res.data, ...products]
+        console.log('res', res)
+        setProducts(newProductsData)
+        setOnAdd()
+      })
+      .catch((err) => console.log(err))
+  }
+
   return (
     <TableRow>
       <TableCell align='center'>
@@ -86,7 +107,7 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit' onClick={handleAddFormSubmit}>
+        <IconButton type='submit' onClick={onAddSubmit}>
           <CheckIcon fontSize='large' color='primary' />
         </IconButton>
         <IconButton onClick={() => setOnAdd()} type='button'>
