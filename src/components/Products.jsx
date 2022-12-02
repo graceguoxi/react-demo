@@ -46,8 +46,8 @@ function getComparator(order, orderBy) {
 export default function EnhancedTable({ searchKeyWord }) {
   const [oriData, setOriData] = React.useState([])
   const [products, setProducts] = React.useState([])
-  const [order, setOrder] = React.useState('asc')
-  const [orderBy, setOrderBy] = React.useState('')
+  const [order, setOrder] = React.useState('desc')
+  const [orderBy, setOrderBy] = React.useState('id')
   const [selected, setSelected] = React.useState([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
@@ -62,7 +62,7 @@ export default function EnhancedTable({ searchKeyWord }) {
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
-    console.log('isAsc:', isAsc)
+    // console.log('isAsc:', isAsc)
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
@@ -241,6 +241,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                             </TableCell>
                             <TableCell align='center'>{product.description}</TableCell>
                             <TableCell align='center'>{product.price}</TableCell>
+                            <TableCell align='center'>{product.category_id}</TableCell>
                             <TableCell align='center'>
                               <img
                                 src={`https://app.spiritx.co.nz/storage/${product.product_image}`}

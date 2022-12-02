@@ -10,6 +10,7 @@ import axios from 'axios'
 
 const AddRow = ({ products, setProducts, setOnAdd }) => {
   const [addFormData, setAddFormData] = useState({
+    category_id:'99',
     title: '',
     description: '',
     price: ''
@@ -58,7 +59,7 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     console.log('token', userToken)
 
     axios
-      .post('https://app.spiritx.co.nz/api/products', { ...addFormData, category_id: 55 }, config)
+      .post('https://app.spiritx.co.nz/api/products', { ...addFormData}, config)
       .then((res) => {
         const newProductsData = [res.data, ...products]
         console.log('res', res)
@@ -76,7 +77,6 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
           required={true}
           name='title'
           placeholder='Enter a title'
-          // defaultValue={editFormData.title}
           onChange={handleAddFormChange}
         ></TextField>
       </TableCell>
@@ -86,7 +86,6 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
           required={true}
           name='description'
           placeholder='Enter a description'
-          // defaultValue={editFormData.description}
           onChange={handleAddFormChange}
         ></TextField>
       </TableCell>
@@ -96,8 +95,14 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
           required={true}
           name='price'
           placeholder='Enter a price'
-          // defaultValue={editFormData.price}
           onChange={handleAddFormChange}
+        ></TextField>
+      </TableCell>
+      <TableCell align='center'>
+        <TextField
+          type='number'
+          required={true}
+          name='category_id'
         ></TextField>
       </TableCell>
       <TableCell align='center'>
