@@ -35,6 +35,15 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick, ha
         ></TextField>
       </TableCell>
       <TableCell align='center'>
+        <TextField
+          type='number'
+          required={true}
+          name='category_id'
+          defaultValue={editFormData.category_id}
+          onChange={handleEditFormChange}
+        ></TextField>
+      </TableCell>
+      <TableCell align='center'>
         <IconButton color='primary' aria-label='upload picture' component='label'>
           <input hidden accept='image/*' type='file' />
           <DriveFolderUploadIcon fontSize='large' />

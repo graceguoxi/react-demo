@@ -103,6 +103,7 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
           type='number'
           required={true}
           name='category_id'
+          onChange={handleAddFormChange}
         ></TextField>
       </TableCell>
       <TableCell align='center'>

@@ -25,6 +25,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import EditableRow from './TableComponents/EditableRow'
 import AddRow from './TableComponents/AddRow'
+import Notification from './TableComponents/Notification'
 import { useState } from 'react'
 
 function descendingComparator(a, b, orderBy) {
@@ -44,8 +45,11 @@ function getComparator(order, orderBy) {
 }
 
 export default function EnhancedTable({ searchKeyWord }) {
+  // expect: []
   const [oriData, setOriData] = React.useState([])
+  // console.log('oriData', oriData)
   const [products, setProducts] = React.useState([])
+  // console.log('pro',products)
   const [order, setOrder] = React.useState('desc')
   const [orderBy, setOrderBy] = React.useState('id')
   const [selected, setSelected] = React.useState([])
@@ -53,6 +57,8 @@ export default function EnhancedTable({ searchKeyWord }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [onAdd, setOnAdd] = useState(false)
   const [editProductId, setEditProductId] = React.useState(null)
+  const [open, setOpen] = React.useState(false)
+  const [productId, setProductId] = useState()
   const [editFormData, setEditFormData] = useState({
     id: '',
     title: '',
@@ -60,12 +66,23 @@ export default function EnhancedTable({ searchKeyWord }) {
     price: ''
   })
 
+  const handleClickOpen = (productId) => {
+    setOpen(true)
+    setProductId(productId)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     // console.log('isAsc:', isAsc)
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
+    console.log('asc',isAsc)
   }
+  
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name)
@@ -107,12 +124,13 @@ export default function EnhancedTable({ searchKeyWord }) {
 
     const fieldValue = e.target.value
 
-    console.log(e.target.name)
+    console.log('name',e.target.name)
 
     setEditFormData((prevState) => ({
       ...prevState,
       [e.target.name]: fieldValue
     }))
+    console.log('form', setEditFormData)
   }
 
   const handleEditClick = (event, product) => {
@@ -123,7 +141,8 @@ export default function EnhancedTable({ searchKeyWord }) {
       id: product.id,
       title: product.title,
       description: product.description,
-      price: product.price
+      price: product.price,
+      category_id: product.category_id
     }
 
     setEditFormData(formValues)
@@ -134,11 +153,35 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const handleDeleteClick = (productId) => {
-    const newProducts = [...products]
-    const index = products.findIndex((product) => product.id === productId)
-    newProducts.splice(index, 1)
-    setProducts(newProducts)
+    // console.log('id',productId)
+    // const newProducts = [...products]
+    // const index = products.findIndex((product) => product.id === productId)
+    // newProducts.splice(index, 1)
+    // setProducts(newProducts)
+
+    const userToken = localStorage.getItem('react-demo-token')
+    console.log('token', userToken)
+    const config = {
+      headers: {
+        token: userToken
+      }
+    }
+    
+
+    axios
+      .delete(`https://app.spiritx.co.nz/api/product/${productId}`, config)
+
+      .then((res) => {
+        const newProducts = [...products]
+        const index = products.findIndex((product) => product.id === productId)
+        newProducts.splice(index, 1)
+        setProducts(newProducts)
+        handleClose()
+      })
+      .catch((err) => console.log(err))
   }
+
+  
 
   const onSubmit = () => {
     const userToken = localStorage.getItem('react-demo-token')
@@ -147,7 +190,7 @@ export default function EnhancedTable({ searchKeyWord }) {
         token: userToken
       }
     }
-
+    
     axios
       .put('https://app.spiritx.co.nz/api/product/' + editFormData.id, editFormData, config)
       .then((res) => {
@@ -158,12 +201,14 @@ export default function EnhancedTable({ searchKeyWord }) {
         setEditProductId(null)
       })
       .catch((err) => console.log(err))
+     
   }
 
   React.useEffect(() => {
     axios
       .get('https://app.spiritx.co.nz/api/products')
       .then((res) => {
+        console.log('res',res)
         const data = res.data
         data.map((prod) => (prod.price = parseInt(prod.price)))
         setOriData(data)
@@ -171,6 +216,7 @@ export default function EnhancedTable({ searchKeyWord }) {
       })
       .catch((err) => console.log(err))
   }, [])
+
 
   React.useEffect(() => {
     console.log(searchKeyWord)
@@ -260,7 +306,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                               <IconButton
                                 variant='outlined'
                                 style={avatarStyle}
-                                onClick={() => handleDeleteClick(product.id)}
+                                onClick={() => handleClickOpen(product.id)}
                               >
                                 <DeleteSharpIcon />
                               </IconButton>
@@ -290,6 +336,12 @@ export default function EnhancedTable({ searchKeyWord }) {
           </TableContainer>
         )}
         {products.length === 0 && <div>No Matching result</div>}
+        <Notification
+          open={open}
+          handleClose={handleClose}
+          handleDeleteClick={handleDeleteClick}
+          productId={productId}
+        />
       </Paper>
     </Box>
   )
