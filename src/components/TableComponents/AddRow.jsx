@@ -1,4 +1,4 @@
-import { IconButton, TableCell, TableRow, TextField } from '@mui/material'
+import { IconButton, Button, TableCell, TableRow, TextField, Input } from '@mui/material'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
@@ -9,15 +9,18 @@ import { useEffect } from 'react'
 import axios from 'axios'
 
 const AddRow = ({ products, setProducts, setOnAdd }) => {
+  const [image, setImage] = useState('')
   const [addFormData, setAddFormData] = useState({
-    category_id:'99',
+    category_id: '99',
     title: '',
     description: '',
     price: ''
   })
 
-  // useEffect(() => console.log(addFormData))
-  // useEffect(() => console.log(products))
+  let formData = new FormData()
+
+  // useEffect(() => console.log('11',addFormData))
+  // useEffect(() => console.log('22',products))
 
   const handleAddFormChange = (e) => {
     e.preventDefault()
@@ -56,18 +59,47 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         token: userToken
       }
     }
-    console.log('token', userToken)
+
+    formData.append('title', addFormData.title)
+    addFormData.description && formData.append('description', addFormData.description)
+    formData.append('price', addFormData.price)
+    formData.append('category_id', 99)
+    image && formData.append('product_image', image)
 
     axios
-      .post('https://app.spiritx.co.nz/api/products', { ...addFormData}, config)
+      .post('https://app.spiritx.co.nz/api/products', formData, config)
       .then((res) => {
         const newProductsData = [res.data, ...products]
         console.log('res', res)
         setProducts(newProductsData)
         setOnAdd()
+        console.log('new',newProductsData)
       })
       .catch((err) => console.log(err))
   }
+
+  const handleImage = (event) => {
+    console.log('image', event)
+    setImage(event.target.files[0])
+  }
+
+  // const handleImgApiUpload = () => {
+  //   const formData = new FormData()
+  //   formData.append('image', image[0])
+  //   const userToken = localStorage.getItem('react-demo-token')
+  //   const config = {
+  //     headers: {
+  //       token: userToken
+  //     }
+  //   }
+  //   axios
+  //     .put('https://app.spiritx.co.nz/api/product', formData.id, formData, config)
+  //     .then((res) => {
+  //       console.log('res', res)
+  //       setImage(res.data)
+  //     })
+  //     .catch()
+  // }
 
   return (
     <TableRow>
@@ -99,21 +131,19 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <TextField
-          type='number'
-          required={true}
-          name='category_id'
-          onChange={handleAddFormChange}
-        ></TextField>
-      </TableCell>
-      <TableCell align='center'>
         <IconButton color='primary' aria-label='upload picture' component='label'>
-          <input hidden accept='image/*' type='file' />
+          <input
+            hidden
+            name='product_image'
+            type='file'
+            accept='image/*'
+            onChange={(e) => handleImage(e)}
+          />
           <DriveFolderUploadIcon fontSize='large' />
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit' onClick={onAddSubmit}>
+        <IconButton type='submit' onClick={onAddSubmit} >
           <CheckIcon fontSize='large' color='primary' />
         </IconButton>
         <IconButton onClick={() => setOnAdd()} type='button'>

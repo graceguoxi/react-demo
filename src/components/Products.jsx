@@ -59,7 +59,9 @@ export default function EnhancedTable({ searchKeyWord }) {
   const [editProductId, setEditProductId] = React.useState(null)
   const [open, setOpen] = React.useState(false)
   const [productId, setProductId] = useState()
+  const [image, setImage] = useState('')
   const [editFormData, setEditFormData] = useState({
+    category_id: '99',
     id: '',
     title: '',
     description: '',
@@ -123,9 +125,11 @@ export default function EnhancedTable({ searchKeyWord }) {
     e.preventDefault()
 
     const fieldValue = e.target.value
-
+    
+    console.log('img', e.target.files)
     console.log('name',e.target.name)
-
+    
+    setImage(e.target.files[0])
     setEditFormData((prevState) => ({
       ...prevState,
       [e.target.name]: fieldValue
@@ -134,18 +138,26 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const handleEditClick = (event, product) => {
+    
     event.preventDefault()
+
+    const formData = new FormData()
+    formData.append('product_image', image)
     setEditProductId(product.id)
+
+    
 
     const formValues = {
       id: product.id,
       title: product.title,
       description: product.description,
       price: product.price,
-      category_id: product.category_id
+      category_id: product.category_id,
+      product_image: product.image
     }
-
+    console.log('editImg', product.image)
     setEditFormData(formValues)
+   
   }
 
   const handleCancelClick = () => {
@@ -252,7 +264,13 @@ export default function EnhancedTable({ searchKeyWord }) {
               />
               <TableBody>
                 {onAdd && (
-                  <AddRow products={products} setProducts={setProducts} setOnAdd={setOnAdd} />
+                  <AddRow
+                    products={products}
+                    setProducts={setProducts}
+                    setOnAdd={setOnAdd}
+                    image={image}
+                    setImage={setImage}
+                  />
                 )}
 
                 {products
@@ -268,6 +286,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                             handleEditFormChange={handleEditFormChange}
                             handleCancelClick={handleCancelClick}
                             handleSubmit={onSubmit}
+                            image={image}
                           />
                         ) : (
                           <TableRow
@@ -287,7 +306,6 @@ export default function EnhancedTable({ searchKeyWord }) {
                             </TableCell>
                             <TableCell align='center'>{product.description}</TableCell>
                             <TableCell align='center'>{product.price}</TableCell>
-                            <TableCell align='center'>{product.category_id}</TableCell>
                             <TableCell align='center'>
                               <img
                                 src={`https://app.spiritx.co.nz/storage/${product.product_image}`}

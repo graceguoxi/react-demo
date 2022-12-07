@@ -22,12 +22,6 @@ const headCells = [
     label: 'Price'
   },
   {
-    id: 'category_id',
-    numeric: true,
-    disablePadding: false,
-    label: 'category_id'
-  },
-  {
     id: 'product_image',
     numeric: true,
     disablePadding: false,

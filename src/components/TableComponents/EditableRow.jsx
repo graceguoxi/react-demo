@@ -3,8 +3,17 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 
-const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick, handleSubmit }) => {
+const EditableRow = ({
+  editFormData,
+  handleEditFormChange,
+  handleCancelClick,
+  handleSubmit,
+  image,
+  setImage
+}) => {
   console.log(editFormData)
+
+  
   return (
     <TableRow>
       <TableCell align='center'>
@@ -35,17 +44,8 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick, ha
         ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <TextField
-          type='number'
-          required={true}
-          name='category_id'
-          defaultValue={editFormData.category_id}
-          onChange={handleEditFormChange}
-        ></TextField>
-      </TableCell>
-      <TableCell align='center'>
         <IconButton color='primary' aria-label='upload picture' component='label'>
-          <input hidden accept='image/*' type='file' />
+          <input hidden accept='image/*' type='file' onChange={handleEditFormChange} />
           <DriveFolderUploadIcon fontSize='large' />
         </IconButton>
       </TableCell>
