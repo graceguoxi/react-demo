@@ -82,9 +82,8 @@ export default function EnhancedTable({ searchKeyWord }) {
     // console.log('isAsc:', isAsc)
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
-    console.log('asc',isAsc)
+    console.log('asc', isAsc)
   }
-  
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name)
@@ -121,15 +120,20 @@ export default function EnhancedTable({ searchKeyWord }) {
 
   const add = () => setOnAdd(!onAdd)
 
+  const handleImageChange = (file) => {
+
+    console.log('image', file)
+    setImage(file)
+    // console.log('target',event.target.files)
+  }
+
   const handleEditFormChange = (e) => {
     e.preventDefault()
 
     const fieldValue = e.target.value
-    
-    console.log('img', e.target.files)
-    console.log('name',e.target.name)
-    
-    setImage(e.target.files[0])
+
+    console.log('name', e.target.name)
+
     setEditFormData((prevState) => ({
       ...prevState,
       [e.target.name]: fieldValue
@@ -138,14 +142,9 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const handleEditClick = (event, product) => {
-    
     event.preventDefault()
 
-    const formData = new FormData()
-    formData.append('product_image', image)
     setEditProductId(product.id)
-
-    
 
     const formValues = {
       id: product.id,
@@ -157,7 +156,6 @@ export default function EnhancedTable({ searchKeyWord }) {
     }
     console.log('editImg', product.image)
     setEditFormData(formValues)
-   
   }
 
   const handleCancelClick = () => {
@@ -178,7 +176,6 @@ export default function EnhancedTable({ searchKeyWord }) {
         token: userToken
       }
     }
-    
 
     axios
       .delete(`https://app.spiritx.co.nz/api/product/${productId}`, config)
@@ -193,8 +190,6 @@ export default function EnhancedTable({ searchKeyWord }) {
       .catch((err) => console.log(err))
   }
 
-  
-
   const onSubmit = () => {
     const userToken = localStorage.getItem('react-demo-token')
     const config = {
@@ -202,25 +197,32 @@ export default function EnhancedTable({ searchKeyWord }) {
         token: userToken
       }
     }
-    
+
+    const formData = new FormData()
+    editFormData.title && formData.append('title', editFormData.title)
+    editFormData.description && formData.append('description', editFormData.description)
+    editFormData.price && formData.append('price', editFormData.price)
+    image && formData.append('product_image', image)
+    formData.append('_method', 'put')
+
     axios
-      .put('https://app.spiritx.co.nz/api/product/' + editFormData.id, editFormData, config)
+      .post('https://app.spiritx.co.nz/api/product/' + editFormData.id, formData, config)
       .then((res) => {
+        console.log(res)
         const newData = [...products]
         const index = products.findIndex((product) => product.id === editFormData.id)
-        newData[index] = editFormData
+        newData[index] = res.data
         setProducts(newData)
         setEditProductId(null)
       })
       .catch((err) => console.log(err))
-     
   }
 
   React.useEffect(() => {
     axios
       .get('https://app.spiritx.co.nz/api/products')
       .then((res) => {
-        console.log('res',res)
+        // console.log('res', res)
         const data = res.data
         data.map((prod) => (prod.price = parseInt(prod.price)))
         setOriData(data)
@@ -229,9 +231,8 @@ export default function EnhancedTable({ searchKeyWord }) {
       .catch((err) => console.log(err))
   }, [])
 
-
   React.useEffect(() => {
-    console.log(searchKeyWord)
+    // console.log(searchKeyWord)
     setProducts(
       oriData.filter((product) => {
         if (searchKeyWord === '') {
@@ -270,6 +271,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                     setOnAdd={setOnAdd}
                     image={image}
                     setImage={setImage}
+                    handleImageChange={(e) => handleImageChange(e)}
                   />
                 )}
 
@@ -281,12 +283,14 @@ export default function EnhancedTable({ searchKeyWord }) {
                       <>
                         {editProductId == product.id ? (
                           <EditableRow
+                            product={product}
                             key={editFormData.id}
                             editFormData={editFormData}
                             handleEditFormChange={handleEditFormChange}
                             handleCancelClick={handleCancelClick}
                             handleSubmit={onSubmit}
                             image={image}
+                            handleImageChange={handleImageChange}
                           />
                         ) : (
                           <TableRow

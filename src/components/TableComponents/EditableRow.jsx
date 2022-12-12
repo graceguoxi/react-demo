@@ -2,6 +2,9 @@ import { IconButton, OutlinedInput, TableCell, TableRow, TextField } from '@mui/
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
+import { useState } from 'react'
+
+
 
 const EditableRow = ({
   editFormData,
@@ -9,11 +12,19 @@ const EditableRow = ({
   handleCancelClick,
   handleSubmit,
   image,
-  setImage
+  setImage,
+  handleImageChange,
+  product
 }) => {
-  console.log(editFormData)
-
-  
+  const [url, setUrl] = useState()
+  const showImg = (e) => {
+    let file = e.target.files[0]
+    let url = window.URL.createObjectURL(file)
+    setUrl(url)
+    console.log('url', url)
+    console.log('file', file)
+    handleImageChange(file)
+  }
   return (
     <TableRow>
       <TableCell align='center'>
@@ -44,8 +55,23 @@ const EditableRow = ({
         ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <IconButton color='primary' aria-label='upload picture' component='label'>
-          <input hidden accept='image/*' type='file' onChange={handleEditFormChange} />
+        <IconButton
+          onClick={handleImageChange}
+          color='primary'
+          aria-label='upload picture'
+          component='label'
+        >
+          <img
+            src={url ? url : `https://app.spiritx.co.nz/storage/${product.product_image}`}
+            width='80'
+            height='60'
+          />
+          {/* <img 
+            src={url}
+            width='80'
+            height='60'
+          /> */}
+          <input hidden accept='image/*' type='file' name='product_image' onChange={showImg} />
           <DriveFolderUploadIcon fontSize='large' />
         </IconButton>
       </TableCell>

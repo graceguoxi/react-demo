@@ -16,6 +16,15 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     description: '',
     price: ''
   })
+  const [addUrl, setAddUrl] = useState()
+  const addImg = (e) => {
+    let imgFile = e.target.files[0]
+    let url = window.URL.createObjectURL(imgFile)
+    setAddUrl(url)
+    console.log('url', addUrl)
+    console.log('file2', imgFile)
+    handleImage(imgFile)
+  }
 
   let formData = new FormData()
 
@@ -73,15 +82,20 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         console.log('res', res)
         setProducts(newProductsData)
         setOnAdd()
-        console.log('new',newProductsData)
+        console.log('new', newProductsData)
       })
       .catch((err) => console.log(err))
   }
 
-  const handleImage = (event) => {
-    console.log('image', event)
-    setImage(event.target.files[0])
+  const handleImage = (file) => {
+    console.log('imageFile', file)
+    setImage(file)
   }
+
+  // const handleImage = (event) => {
+  //   console.log('image', event)
+  //   setImage(event.target.files[0])
+  // }
 
   // const handleImgApiUpload = () => {
   //   const formData = new FormData()
@@ -132,18 +146,19 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
       </TableCell>
       <TableCell align='center'>
         <IconButton color='primary' aria-label='upload picture' component='label'>
+          {addUrl ? <img src={addUrl} width='80' height='60' /> : ''}
           <input
             hidden
             name='product_image'
             type='file'
             accept='image/*'
-            onChange={(e) => handleImage(e)}
+            onChange={(e) => addImg(e)}
           />
           <DriveFolderUploadIcon fontSize='large' />
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit' onClick={onAddSubmit} >
+        <IconButton type='submit' onClick={onAddSubmit}>
           <CheckIcon fontSize='large' color='primary' />
         </IconButton>
         <IconButton onClick={() => setOnAdd()} type='button'>
