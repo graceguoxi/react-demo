@@ -22,11 +22,15 @@ import { visuallyHidden } from '@mui/utils'
 import CreateSharpIcon from '@mui/icons-material/CreateSharp'
 import { Avatar, Button } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import UploadIcon from '@mui/icons-material/Upload'
+import DownloadIcon from '@mui/icons-material/Download'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import EditableRow from './TableComponents/EditableRow'
 import AddRow from './TableComponents/AddRow'
 import Notification from './TableComponents/Notification'
 import { useState } from 'react'
+import ImportExcel from './TableComponents/ImportExcel'
+import ExportExcel from './TableComponents/ExportExcel'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -121,7 +125,6 @@ export default function EnhancedTable({ searchKeyWord }) {
   const add = () => setOnAdd(!onAdd)
 
   const handleImageChange = (file) => {
-
     console.log('image', file)
     setImage(file)
     // console.log('target',event.target.files)
@@ -245,11 +248,15 @@ export default function EnhancedTable({ searchKeyWord }) {
     )
   }, [searchKeyWord])
 
+
+
   return (
     <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
       <Button variant='text'>
         <AddCircleIcon onClick={() => add()} fontSize='large' />
       </Button>
+      <ImportExcel products={products} setProducts={setProducts} />
+      <ExportExcel Products={products}  />
       <TableHead />
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
