@@ -2,13 +2,16 @@ import { Box } from '@mui/system'
 import UploadIcon from '@mui/icons-material/Upload'
 import * as XLSX from 'xlsx'
 import { Button, IconButton } from '@mui/material'
+import { useState } from 'react'
 
 const ImportExcel = ({ products, setProducts, setMessage }) => {
-  const onImport = (e) => {
-    const uploadFile = e.target.files[0]
-    const fileReader = new FileReader()
 
-    fileReader.readAsArrayBuffer(uploadFile)
+  const handleRequestImport = e => {
+    const uploadedFile = e.target.files[0]
+    const fileReader = new FileReader()
+  
+
+    fileReader.readAsArrayBuffer(uploadedFile)
     fileReader.onload = (e) => {
       const bufferArray = e.target.result
       const workbook = XLSX.read(bufferArray, { type: 'buffer' })
@@ -30,7 +33,7 @@ const ImportExcel = ({ products, setProducts, setMessage }) => {
   }
 
   return (
-    <Button
+    <IconButton
       component='label'
       color='primary'
       sx={{
@@ -43,11 +46,11 @@ const ImportExcel = ({ products, setProducts, setMessage }) => {
         // accept=''
         type='file'
         onChange={(e) => {
-          onImport(e)
+          handleRequestImport(e)
         }}
       />
       <UploadIcon />
-    </Button>
+    </IconButton>
   )
 }
 

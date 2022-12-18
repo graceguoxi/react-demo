@@ -255,9 +255,13 @@ export default function EnhancedTable({ searchKeyWord }) {
       <Button variant='text'>
         <AddCircleIcon onClick={() => add()} fontSize='large' />
       </Button>
-      <ImportExcel products={products} setProducts={setProducts} />
-      <ExportExcel Products={products}  />
-      <TableHead />
+      <Button>
+        <ImportExcel products={products} setProducts={setProducts} />
+      </Button>
+      <Button>
+        <ExportExcel Products={products} />
+        <TableHead />
+      </Button>
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
           <TableContainer>

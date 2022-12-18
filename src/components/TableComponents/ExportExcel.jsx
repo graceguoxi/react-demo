@@ -6,11 +6,17 @@ import * as XLSX from 'xlsx'
 
 const ExportExcel = ({ Products , setMessage }) => {
   const handleOnExport = products => {
+    const workbook = XLSX.utils.book_new()
+    const workSheet = XLSX.utils.json_to_sheet(products)
+
+    XLSX.utils.book_append_sheet(workbook, workSheet, "Products")
+
+    XLSX.writeFile(workbook, "luxdream.xlsx")
     
   }
 
   return (
-    <Button
+    <IconButton
       sx={{
         display: 'flex'
       }}
@@ -19,7 +25,7 @@ const ExportExcel = ({ Products , setMessage }) => {
       <IconButton sx={{ px: 1.5 }} onClick={() => handleOnExport(Products)}>
         <DownloadIcon />
       </IconButton>
-    </Button>
+    </IconButton>
   )
 }
 
