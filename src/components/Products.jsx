@@ -31,6 +31,7 @@ import Notification from './TableComponents/Notification'
 import { useState } from 'react'
 import ImportExcel from './TableComponents/ImportExcel'
 import ExportExcel from './TableComponents/ExportExcel'
+import { apiDelete, apiGet, apiPost } from './services'
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -172,16 +173,18 @@ export default function EnhancedTable({ searchKeyWord }) {
     // newProducts.splice(index, 1)
     // setProducts(newProducts)
 
-    const userToken = localStorage.getItem('react-demo-token')
-    console.log('token', userToken)
-    const config = {
-      headers: {
-        token: userToken
-      }
-    }
+    // const userToken = localStorage.getItem('react-demo-token')
+    // console.log('token', userToken)
+    // const config = {
+    //   headers: {
+    //     token: userToken
+    //   }
+    // }
 
-    axios
-      .delete(`https://app.spiritx.co.nz/api/product/${productId}`, config)
+    apiDelete(`product/${productId}`)
+
+    // axios
+    //   .delete(`https://app.spiritx.co.nz/api/product/${productId}`, config)
 
       .then((res) => {
         const newProducts = [...products]
@@ -194,12 +197,12 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const onSubmit = () => {
-    const userToken = localStorage.getItem('react-demo-token')
-    const config = {
-      headers: {
-        token: userToken
-      }
-    }
+    // const userToken = localStorage.getItem('react-demo-token')
+    // const config = {
+    //   headers: {
+    //     token: userToken
+    //   }
+    // }
 
     const formData = new FormData()
     editFormData.title && formData.append('title', editFormData.title)
@@ -208,8 +211,10 @@ export default function EnhancedTable({ searchKeyWord }) {
     image && formData.append('product_image', image)
     formData.append('_method', 'put')
 
-    axios
-      .post('https://app.spiritx.co.nz/api/product/' + editFormData.id, formData, config)
+    apiPost(`product/${editFormData.id}`, formData)
+
+    // axios
+    //   .post('https://app.spiritx.co.nz/api/product/' + editFormData.id, formData, config)
       .then((res) => {
         console.log(res)
         const newData = [...products]
@@ -222,8 +227,9 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   React.useEffect(() => {
-    axios
-      .get('https://app.spiritx.co.nz/api/products')
+    apiGet('products')
+    // axios
+    //   .get('https://app.spiritx.co.nz/api/products')
       .then((res) => {
         // console.log('res', res)
         const data = res.data
