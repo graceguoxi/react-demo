@@ -1,4 +1,4 @@
-import { IconButton, OutlinedInput, TableCell, TableRow, TextField } from '@mui/material'
+import { IconButton, TableCell, TableRow, TextField } from '@mui/material'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
@@ -11,20 +11,27 @@ const EditableRow = ({
   handleEditFormChange,
   handleCancelClick,
   handleSubmit,
-  image,
-  setImage,
   handleImageChange,
   product
 }) => {
+  const [disable, setDisable] = useState(true)
   const [url, setUrl] = useState()
   const showImg = (e) => {
     let file = e.target.files[0]
     let url = window.URL.createObjectURL(file)
     setUrl(url)
-    console.log('url', url)
-    console.log('file', file)
     handleImageChange(file)
   }
+  const onTextChange = () => {
+    console.log('first')
+    setDisable(false)
+    handleEditFormChange()
+  }
+  const onImgChange = () => {
+    handleImageChange()
+    setDisable(false)
+  }
+
   return (
     <TableRow>
       <TableCell align='center'>
@@ -33,7 +40,7 @@ const EditableRow = ({
           required={true}
           name='title'
           defaultValue={editFormData.title}
-          onChange={handleEditFormChange}
+          onChange={onTextChange}
         ></TextField>
       </TableCell>
       <TableCell align='center'>
@@ -42,7 +49,7 @@ const EditableRow = ({
           required={true}
           name='description'
           defaultValue={editFormData.description}
-          onChange={handleEditFormChange}
+          onChange={onTextChange}
         ></TextField>
       </TableCell>
       <TableCell align='center'>
@@ -51,35 +58,50 @@ const EditableRow = ({
           required={true}
           name='price'
           defaultValue={editFormData.price}
-          onChange={handleEditFormChange}
+          onChange={onTextChange}
         ></TextField>
       </TableCell>
       <TableCell align='center'>
         <IconButton
-          onClick={handleImageChange}
+          onClick={onImgChange}
           color='primary'
           aria-label='upload picture'
           component='label'
         >
           <img
-            src={url ? url : `https://app.spiritx.co.nz/storage/${product.product_image}`}
+            src={
+              url
+                ? url
+                : `https://app.spiritx.co.nz/storage/${product.product_image}`
+            }
             width='80'
             height='60'
           />
-          {/* <img 
-            src={url}
-            width='80'
-            height='60'
-          /> */}
-          <input hidden accept='image/*' type='file' name='product_image' onChange={showImg} />
+          <input
+            hidden
+            accept='image/*'
+            type='file'
+            name='product_image'
+            onChange={showImg}
+          />
           <DriveFolderUploadIcon fontSize='large' />
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit' onClick={handleSubmit}>
-          <CheckIcon fontSize='large' color='primary' />
+        <IconButton
+          type='submit'
+          disabled={disable}
+          onClick={handleSubmit}
+        >
+          <CheckIcon
+            fontSize='large'
+            color={disable ? 'disabled' : 'primary'}
+          />
         </IconButton>
-        <IconButton type='button' onClick={handleCancelClick}>
+        <IconButton
+          type='button'
+          onClick={handleCancelClick}
+        >
           <ClearIcon fontSize='large' color='primary' />
         </IconButton>
       </TableCell>

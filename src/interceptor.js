@@ -1,4 +1,4 @@
-import { BaseUrl } from "./components/environment"
+import { BaseUrl } from "./environment"
 
 const onRequest = (config) => {
   const userToken = localStorage.getItem('react-demo-token')

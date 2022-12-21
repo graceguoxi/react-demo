@@ -1,6 +1,4 @@
-import * as React from 'react'
-// import axios from 'axios'
-// import PropTypes from 'prop-types'
+
 import EnhancedTableHead from './TableComponents/TableHead'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
@@ -10,59 +8,32 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-// import TableSortLabel from '@mui/material/TableSortLabel'
-// import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
-// import Tooltip from '@mui/material/Tooltip'
-// import FormControlLabel from '@mui/material/FormControlLabel'
-// import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp'
-import { visuallyHidden } from '@mui/utils'
 import CreateSharpIcon from '@mui/icons-material/CreateSharp'
-import { Avatar, Button } from '@mui/material'
-// import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-// import UploadIcon from '@mui/icons-material/Upload'
-// import DownloadIcon from '@mui/icons-material/Download'
+import { Button } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import EditableRow from './TableComponents/EditableRow'
 import AddRow from './TableComponents/AddRow'
 import Notification from './TableComponents/Notification'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ImportExcel from './TableComponents/ImportExcel'
 import ExportExcel from './TableComponents/ExportExcel'
 import { apiDelete, apiGet, apiPost } from './services'
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
+import { getComparator } from './TableComponents/Comparator'
 
 export default function EnhancedTable({ searchKeyWord }) {
-  // expect: []
-  const [oriData, setOriData] = React.useState([])
-  // console.log('oriData', oriData)
-  const [products, setProducts] = React.useState([])
-  // console.log('pro',products)
-  const [order, setOrder] = React.useState('desc')
-  const [orderBy, setOrderBy] = React.useState('id')
-  const [selected, setSelected] = React.useState([])
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [oriData, setOriData] = useState([])
+  const [products, setProducts] = useState([])
+  const [order, setOrder] = useState('desc')
+  const [orderBy, setOrderBy] = useState('id')
+  const [selected, setSelected] = useState([])
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
   const [onAdd, setOnAdd] = useState(false)
-  const [editProductId, setEditProductId] = React.useState(null)
-  const [open, setOpen] = React.useState(false)
+  const [editProductId, setEditProductId] = useState(null)
+  const [open, setOpen] = useState(false)
   const [productId, setProductId] = useState()
   const [image, setImage] = useState('')
   const [editFormData, setEditFormData] = useState({
@@ -84,7 +55,6 @@ export default function EnhancedTable({ searchKeyWord }) {
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
-    // console.log('isAsc:', isAsc)
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
     console.log('asc', isAsc)
@@ -126,9 +96,7 @@ export default function EnhancedTable({ searchKeyWord }) {
   const add = () => setOnAdd(!onAdd)
 
   const handleImageChange = (file) => {
-    console.log('image', file)
     setImage(file)
-    // console.log('target',event.target.files)
   }
 
   const handleEditFormChange = (e) => {
@@ -136,13 +104,10 @@ export default function EnhancedTable({ searchKeyWord }) {
 
     const fieldValue = e.target.value
 
-    console.log('name', e.target.name)
-
     setEditFormData((prevState) => ({
       ...prevState,
       [e.target.name]: fieldValue
     }))
-    console.log('form', setEditFormData)
   }
 
   const handleEditClick = (event, product) => {
@@ -158,7 +123,6 @@ export default function EnhancedTable({ searchKeyWord }) {
       category_id: product.category_id,
       product_image: product.image
     }
-    console.log('editImg', product.image)
     setEditFormData(formValues)
   }
 
@@ -167,25 +131,8 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const handleDeleteClick = (productId) => {
-    // console.log('id',productId)
-    // const newProducts = [...products]
-    // const index = products.findIndex((product) => product.id === productId)
-    // newProducts.splice(index, 1)
-    // setProducts(newProducts)
-
-    // const userToken = localStorage.getItem('react-demo-token')
-    // console.log('token', userToken)
-    // const config = {
-    //   headers: {
-    //     token: userToken
-    //   }
-    // }
 
     apiDelete(`product/${productId}`)
-
-    // axios
-    //   .delete(`https://app.spiritx.co.nz/api/product/${productId}`, config)
-
       .then((res) => {
         const newProducts = [...products]
         const index = products.findIndex((product) => product.id === productId)
@@ -197,13 +144,6 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const onSubmit = () => {
-    // const userToken = localStorage.getItem('react-demo-token')
-    // const config = {
-    //   headers: {
-    //     token: userToken
-    //   }
-    // }
-
     const formData = new FormData()
     editFormData.title && formData.append('title', editFormData.title)
     editFormData.description && formData.append('description', editFormData.description)
@@ -212,9 +152,6 @@ export default function EnhancedTable({ searchKeyWord }) {
     formData.append('_method', 'put')
 
     apiPost(`product/${editFormData.id}`, formData)
-
-    // axios
-    //   .post('https://app.spiritx.co.nz/api/product/' + editFormData.id, formData, config)
       .then((res) => {
         console.log(res)
         const newData = [...products]
@@ -226,12 +163,9 @@ export default function EnhancedTable({ searchKeyWord }) {
       .catch((err) => console.log(err))
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     apiGet('products')
-    // axios
-    //   .get('https://app.spiritx.co.nz/api/products')
       .then((res) => {
-        // console.log('res', res)
         const data = res.data
         data.map((prod) => (prod.price = parseInt(prod.price)))
         setOriData(data)
@@ -240,8 +174,7 @@ export default function EnhancedTable({ searchKeyWord }) {
       .catch((err) => console.log(err))
   }, [])
 
-  React.useEffect(() => {
-    // console.log(searchKeyWord)
+  useEffect(() => {
     setProducts(
       oriData.filter((product) => {
         if (searchKeyWord === '') {

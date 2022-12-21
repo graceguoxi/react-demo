@@ -1,11 +1,9 @@
-import { IconButton, Button, TableCell, TableRow, TextField, Input } from '@mui/material'
+import { IconButton, Button, TableCell, TableRow, TextField} from '@mui/material'
 import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 import { nanoid } from 'nanoid'
-import { Form } from 'react-router-dom'
 import { useState } from 'react'
-import { useEffect } from 'react'
 import axios from 'axios'
 
 const AddRow = ({ products, setProducts, setOnAdd }) => {
@@ -21,15 +19,10 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     let imgFile = e.target.files[0]
     let url = window.URL.createObjectURL(imgFile)
     setAddUrl(url)
-    console.log('url', addUrl)
-    console.log('file2', imgFile)
     handleImage(imgFile)
   }
 
   let formData = new FormData()
-
-  // useEffect(() => console.log('11',addFormData))
-  // useEffect(() => console.log('22',products))
 
   const handleAddFormChange = (e) => {
     e.preventDefault()
@@ -41,7 +34,6 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     newFormDate[fieldName] = fieldValue
 
     setAddFormData(newFormDate)
-    console.log('change', e.target.value)
   }
 
   const handleAddFormSubmit = (e) => {
@@ -59,7 +51,6 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     setProducts(newProducts)
     setOnAdd()
   }
-  // console.log('new', products)
 
   const onAddSubmit = () => {
     const userToken = localStorage.getItem('react-demo-token')
@@ -91,29 +82,6 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     console.log('imageFile', file)
     setImage(file)
   }
-
-  // const handleImage = (event) => {
-  //   console.log('image', event)
-  //   setImage(event.target.files[0])
-  // }
-
-  // const handleImgApiUpload = () => {
-  //   const formData = new FormData()
-  //   formData.append('image', image[0])
-  //   const userToken = localStorage.getItem('react-demo-token')
-  //   const config = {
-  //     headers: {
-  //       token: userToken
-  //     }
-  //   }
-  //   axios
-  //     .put('https://app.spiritx.co.nz/api/product', formData.id, formData, config)
-  //     .then((res) => {
-  //       console.log('res', res)
-  //       setImage(res.data)
-  //     })
-  //     .catch()
-  // }
 
   return (
     <TableRow>
