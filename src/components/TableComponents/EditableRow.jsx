@@ -12,9 +12,10 @@ const EditableRow = ({
   handleCancelClick,
   handleSubmit,
   handleImageChange,
-  product
+  product,
+  disable,
+  setDisable
 }) => {
-  const [disable, setDisable] = useState(true)
   const [url, setUrl] = useState()
   const showImg = (e) => {
     let file = e.target.files[0]
@@ -23,7 +24,6 @@ const EditableRow = ({
     handleImageChange(file)
   }
   const onTextChange = () => {
-    console.log('first')
     setDisable(false)
     handleEditFormChange()
   }

@@ -50,7 +50,6 @@ const ImportExcel = ({
     >
       <input
         hidden
-        // accept=''
         type='file'
         onChange={(e) => {
           handleRequestImport(e)

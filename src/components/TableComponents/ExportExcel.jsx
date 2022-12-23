@@ -16,16 +16,16 @@ const ExportExcel = ({ Products , setMessage }) => {
   }
 
   return (
-    <IconButton
+    <div
       sx={{
         display: 'flex'
       }}
     >
-      {/* <p>Export Excel</p> */}
-      <IconButton sx={{ px: 1.5 }} onClick={() => handleOnExport(Products)}>
+      
+      <IconButton sx={{ px: 1.5 }} onClick={() => handleOnExport(Products)} color='primary'>
         <DownloadIcon />
       </IconButton>
-    </IconButton>
+    </div>
   )
 }
 

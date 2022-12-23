@@ -5,8 +5,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import { nanoid } from 'nanoid'
 import { useState } from 'react'
 import axios from 'axios'
+import { apiPost } from '../services'
 
-const AddRow = ({ products, setProducts, setOnAdd }) => {
+const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
   const [image, setImage] = useState('')
   const [addFormData, setAddFormData] = useState({
     category_id: '99',
@@ -66,8 +67,9 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     formData.append('category_id', 99)
     image && formData.append('product_image', image)
 
-    axios
-      .post('https://app.spiritx.co.nz/api/products', formData, config)
+    apiPost('products', formData)
+    // axios
+    //   .post('https://app.spiritx.co.nz/api/products', formData, config)
       .then((res) => {
         const newProductsData = [res.data, ...products]
         console.log('res', res)
@@ -82,6 +84,11 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
     console.log('imageFile', file)
     setImage(file)
   }
+
+  // const onAddChange = () => {
+  //   setDisable(false)
+  //   onAddSubmit()
+  // }
 
   return (
     <TableRow>
@@ -113,8 +120,16 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         ></TextField>
       </TableCell>
       <TableCell align='center'>
-        <IconButton color='primary' aria-label='upload picture' component='label'>
-          {addUrl ? <img src={addUrl} width='80' height='60' /> : ''}
+        <IconButton
+          color='primary'
+          aria-label='upload picture'
+          component='label'
+        >
+          {addUrl ? (
+            <img src={addUrl} width='80' height='60' />
+          ) : (
+            ''
+          )}
           <input
             hidden
             name='product_image'
@@ -126,10 +141,20 @@ const AddRow = ({ products, setProducts, setOnAdd }) => {
         </IconButton>
       </TableCell>
       <TableCell align='center'>
-        <IconButton type='submit' onClick={onAddSubmit}>
-          <CheckIcon fontSize='large' color='primary' />
+        <IconButton
+          type='submit'
+          onClick={onAddSubmit}
+          // disabled={disable}
+        >
+          <CheckIcon
+            fontSize='large'
+            color={disable ? 'disabled' : 'primary'}
+          />
         </IconButton>
-        <IconButton onClick={() => setOnAdd()} type='button'>
+        <IconButton
+          onClick={() => setOnAdd()}
+          type='button'
+        >
           <ClearIcon fontSize='large' color='primary' />
         </IconButton>
       </TableCell>

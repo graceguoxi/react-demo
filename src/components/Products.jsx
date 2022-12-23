@@ -24,6 +24,7 @@ import { apiDelete, apiGet, apiPost } from './services'
 import { getComparator } from './TableComponents/Comparator'
 
 export default function EnhancedTable({ searchKeyWord }) {
+  const [disable, setDisable] = useState(true)
   const [oriData, setOriData] = useState([])
   const [products, setProducts] = useState([])
   const [order, setOrder] = useState('desc')
@@ -192,19 +193,29 @@ export default function EnhancedTable({ searchKeyWord }) {
   return (
     <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
       <Button variant='text'>
-        <AddCircleIcon onClick={() => add()} fontSize='large' />
+        <AddCircleIcon
+          onClick={() => add()}
+          fontSize='large'
+        />
       </Button>
       <Button>
-        <ImportExcel products={products} setProducts={setProducts} />
+        <ImportExcel
+          products={products}
+          setProducts={setProducts}
+        />
       </Button>
       <Button>
         <ExportExcel Products={products} />
-        <TableHead />
       </Button>
+      <TableHead />
       <Paper sx={{ width: '100%', mb: 2 }}>
         {products.length > 0 && (
           <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={'medium'}>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby='tableTitle'
+              size={'medium'}
+            >
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
@@ -221,13 +232,20 @@ export default function EnhancedTable({ searchKeyWord }) {
                     setOnAdd={setOnAdd}
                     image={image}
                     setImage={setImage}
-                    handleImageChange={(e) => handleImageChange(e)}
+                    handleImageChange={(e) =>
+                      handleImageChange(e)
+                    }
+                    disable={disable}
+                    setDisable={setDisable}
                   />
                 )}
 
                 {products
                   .sort(getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   .map((product, index) => {
                     return (
                       <>
@@ -236,16 +254,29 @@ export default function EnhancedTable({ searchKeyWord }) {
                             product={product}
                             key={editFormData.id}
                             editFormData={editFormData}
-                            handleEditFormChange={handleEditFormChange}
-                            handleCancelClick={handleCancelClick}
+                            handleEditFormChange={
+                              handleEditFormChange
+                            }
+                            handleCancelClick={
+                              handleCancelClick
+                            }
                             handleSubmit={onSubmit}
                             image={image}
-                            handleImageChange={handleImageChange}
+                            handleImageChange={
+                              handleImageChange
+                            }
+                            disable={disable}
+                            setDisable={setDisable}
                           />
                         ) : (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, product.title)}
+                            onClick={(event) =>
+                              handleClick(
+                                event,
+                                product.title
+                              )
+                            }
                             tabIndex={-1}
                             key={product.id}
                           >
@@ -258,8 +289,12 @@ export default function EnhancedTable({ searchKeyWord }) {
                             >
                               {product.title}
                             </TableCell>
-                            <TableCell align='center'>{product.description}</TableCell>
-                            <TableCell align='center'>{product.price}</TableCell>
+                            <TableCell align='center'>
+                              {product.description}
+                            </TableCell>
+                            <TableCell align='center'>
+                              {product.price}
+                            </TableCell>
                             <TableCell align='center'>
                               <img
                                 src={`https://app.spiritx.co.nz/storage/${product.product_image}`}
@@ -271,14 +306,23 @@ export default function EnhancedTable({ searchKeyWord }) {
                               <IconButton
                                 variant='outlined'
                                 style={avatarStyle}
-                                onClick={(event) => handleEditClick(event, product)}
+                                onClick={(event) =>
+                                  handleEditClick(
+                                    event,
+                                    product
+                                  )
+                                }
                               >
                                 <CreateSharpIcon />
                               </IconButton>
                               <IconButton
                                 variant='outlined'
                                 style={avatarStyle}
-                                onClick={() => handleClickOpen(product.id)}
+                                onClick={() =>
+                                  handleClickOpen(
+                                    product.id
+                                  )
+                                }
                               >
                                 <DeleteSharpIcon />
                               </IconButton>
@@ -289,7 +333,9 @@ export default function EnhancedTable({ searchKeyWord }) {
                     )
                   })}
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableRow
+                    style={{ height: 53 * emptyRows }}
+                  >
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}
@@ -307,7 +353,9 @@ export default function EnhancedTable({ searchKeyWord }) {
             />
           </TableContainer>
         )}
-        {products.length === 0 && <div>No Matching result</div>}
+        {products.length === 0 && (
+          <div>No Matching result</div>
+        )}
         <Notification
           open={open}
           handleClose={handleClose}
