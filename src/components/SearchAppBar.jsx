@@ -116,7 +116,9 @@ export default function SearchAppBar({ keyWord, onSearch, auth, logout, user }) 
 
   const location = useLocation()
   const isLoginPage = location.pathname.search('login') !== -1
-  console.log(location)
+  console.log('location',location)
+  console.log('pathname', location.pathname)
+  console.log('pathsearch', location.pathname.search('login'))
 
   return (
     <Box sx={{ flexGrow: 1 }}>

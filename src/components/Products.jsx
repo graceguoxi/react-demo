@@ -1,4 +1,3 @@
-
 import EnhancedTableHead from './TableComponents/TableHead'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
@@ -22,6 +21,7 @@ import ImportExcel from './TableComponents/ImportExcel'
 import ExportExcel from './TableComponents/ExportExcel'
 import { apiDelete, apiGet, apiPost } from './services'
 import { getComparator } from './TableComponents/Comparator'
+import { BaseStorageUrl } from '../environment'
 
 export default function EnhancedTable({ searchKeyWord }) {
   const [disable, setDisable] = useState(true)
@@ -70,7 +70,9 @@ export default function EnhancedTable({ searchKeyWord }) {
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1))
+      newSelected = newSelected.concat(
+        selected.slice(0, -1)
+      )
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
@@ -90,9 +92,19 @@ export default function EnhancedTable({ searchKeyWord }) {
     setPage(0)
   }
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0
+  const emptyRows =
+    page > 0
+      ? Math.max(
+          0,
+          (1 + page) * rowsPerPage - products.length
+        )
+      : 0
 
-  const avatarStyle = { backgroundColor: '#2149e4', color: 'white', margin: '0 10px' }
+  const avatarStyle = {
+    backgroundColor: '#2149e4',
+    color: 'white',
+    margin: '0 10px'
+  }
 
   const add = () => setOnAdd(!onAdd)
 
@@ -132,11 +144,12 @@ export default function EnhancedTable({ searchKeyWord }) {
   }
 
   const handleDeleteClick = (productId) => {
-
     apiDelete(`product/${productId}`)
       .then((res) => {
         const newProducts = [...products]
-        const index = products.findIndex((product) => product.id === productId)
+        const index = products.findIndex(
+          (product) => product.id === productId
+        )
         newProducts.splice(index, 1)
         setProducts(newProducts)
         handleClose()
@@ -146,9 +159,15 @@ export default function EnhancedTable({ searchKeyWord }) {
 
   const onSubmit = () => {
     const formData = new FormData()
-    editFormData.title && formData.append('title', editFormData.title)
-    editFormData.description && formData.append('description', editFormData.description)
-    editFormData.price && formData.append('price', editFormData.price)
+    editFormData.title &&
+      formData.append('title', editFormData.title)
+    editFormData.description &&
+      formData.append(
+        'description',
+        editFormData.description
+      )
+    editFormData.price &&
+      formData.append('price', editFormData.price)
     image && formData.append('product_image', image)
     formData.append('_method', 'put')
 
@@ -156,7 +175,9 @@ export default function EnhancedTable({ searchKeyWord }) {
       .then((res) => {
         console.log(res)
         const newData = [...products]
-        const index = products.findIndex((product) => product.id === editFormData.id)
+        const index = products.findIndex(
+          (product) => product.id === editFormData.id
+        )
         newData[index] = res.data
         setProducts(newData)
         setEditProductId(null)
@@ -168,7 +189,9 @@ export default function EnhancedTable({ searchKeyWord }) {
     apiGet('products')
       .then((res) => {
         const data = res.data
-        data.map((prod) => (prod.price = parseInt(prod.price)))
+        // data.map(
+        //   (prod) => (prod.price = parseInt(prod.price))
+        // )
         setOriData(data)
         setProducts(data)
       })
@@ -181,14 +204,15 @@ export default function EnhancedTable({ searchKeyWord }) {
         if (searchKeyWord === '') {
           return product
         }
-        if (product.title.includes(searchKeyWord) || product.description.includes(searchKeyWord)) {
+        if (
+          product.title.includes(searchKeyWord) ||
+          product.description.includes(searchKeyWord)
+        ) {
           return product
         }
       })
     )
   }, [searchKeyWord])
-
-
 
   return (
     <Box sx={{ width: '88%', padding: '0 100px 0 100px' }}>
@@ -252,7 +276,7 @@ export default function EnhancedTable({ searchKeyWord }) {
                         {editProductId == product.id ? (
                           <EditableRow
                             product={product}
-                            key={editFormData.id}
+                            key={index}
                             editFormData={editFormData}
                             handleEditFormChange={
                               handleEditFormChange
@@ -296,11 +320,13 @@ export default function EnhancedTable({ searchKeyWord }) {
                               {product.price}
                             </TableCell>
                             <TableCell align='center'>
-                              <img
-                                src={`https://app.spiritx.co.nz/storage/${product.product_image}`}
-                                width='80'
-                                height='60'
-                              />
+                              {product.product_image && (
+                                <img
+                                  src={`${BaseStorageUrl}${product.product_image}`}
+                                  width='80'
+                                  height='60'
+                                />
+                              )}
                             </TableCell>
                             <TableCell align='center'>
                               <IconButton
@@ -353,9 +379,11 @@ export default function EnhancedTable({ searchKeyWord }) {
             />
           </TableContainer>
         )}
+
         {products.length === 0 && (
           <div>No Matching result</div>
         )}
+
         <Notification
           open={open}
           handleClose={handleClose}

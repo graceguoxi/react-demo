@@ -1,4 +1,4 @@
-import { BaseUrl } from "./environment"
+import { BaseUrl } from './environment'
 
 const onRequest = (config) => {
   const userToken = localStorage.getItem('react-demo-token')
@@ -8,7 +8,15 @@ const onRequest = (config) => {
   }
 
   if (!config.url?.includes('login')) {
-    const newConfig = { ...config, headers: { ...config.headers, 'token': userToken } }
+    const newConfig = {
+      ...config,
+      headers: {
+        ...config.headers,
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: 'Bearer ' + userToken
+      }
+    }
     return newConfig
   }
   return config
@@ -29,7 +37,13 @@ const onResponseError = (error) => {
 }
 
 export const setupInterceptorsTo = (axiosInstance) => {
-  axiosInstance.interceptors.request.use(onRequest, onRequestError)
-  axiosInstance.interceptors.response.use(onResponse, onResponseError)
+  axiosInstance.interceptors.request.use(
+    onRequest,
+    onRequestError
+  )
+  axiosInstance.interceptors.response.use(
+    onResponse,
+    onResponseError
+  )
   return axiosInstance
 }

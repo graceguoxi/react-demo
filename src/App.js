@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './components/Login'
-import MuiTable from './components/MuiTable'
 import SearchAppBar from './components/SearchAppBar'
 import Products from './components/Products'
 import { Details } from '@mui/icons-material'

@@ -4,8 +4,6 @@ import ClearIcon from '@mui/icons-material/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 import { useState } from 'react'
 
-
-
 const EditableRow = ({
   editFormData,
   handleEditFormChange,
@@ -23,9 +21,9 @@ const EditableRow = ({
     setUrl(url)
     handleImageChange(file)
   }
-  const onTextChange = () => {
+  const onTextChange = (e) => {
     setDisable(false)
-    handleEditFormChange()
+    handleEditFormChange(e)
   }
   const onImgChange = () => {
     handleImageChange()

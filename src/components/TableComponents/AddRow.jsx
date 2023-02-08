@@ -28,12 +28,19 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
   const handleAddFormChange = (e) => {
     e.preventDefault()
 
-    const fieldName = e.target.getAttribute('name')
+    // const fieldName = e.target.getAttribute('name')
     const fieldValue = e.target.value
+    console.log('fieldname', e)
+    console.log('fieldValue', fieldValue)
 
-    const newFormDate = { ...addFormData }
-    newFormDate[fieldName] = fieldValue
+    // const newFormDate = { ...addFormData }
+    // newFormDate[fieldName] = fieldValue
 
+    const newFormDate = {
+      [e.target.name]: fieldValue,
+      ...prevState
+    }
+    console.log('newFormData', newFormDate)
     setAddFormData(newFormDate)
   }
 
@@ -53,31 +60,43 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
     setOnAdd()
   }
 
-  const onAddSubmit = () => {
-    const userToken = localStorage.getItem('react-demo-token')
-    const config = {
+  const onAddSubmit = (e) => {
+    e.preventDefault()
+    formData.append('name', addFormData.title)
+    addFormData.description && formData.append('slug', addFormData.description)
+    formData.append('price', addFormData.price)
+    // formData.append('category_id', 99)
+    image && formData.append('product_image', image)
+    
+    const userToken = localStorage.getItem(
+      'react-demo-token'
+    )
+
+    let config = {
       headers: {
-        token: userToken
+        Authorization: 'Bearer ' + userToken
       }
     }
 
-    formData.append('title', addFormData.title)
-    addFormData.description && formData.append('description', addFormData.description)
-    formData.append('price', addFormData.price)
-    formData.append('category_id', 99)
-    image && formData.append('product_image', image)
-
-    apiPost('products', formData)
-    // axios
-    //   .post('https://app.spiritx.co.nz/api/products', formData, config)
+    axios
+      .post(
+        'http://localhost:8000/api/products',
+        formData,
+        config
+      )
       .then((res) => {
-        const newProductsData = [res.data, ...products]
-        console.log('res', res)
-        setProducts(newProductsData)
-        setOnAdd()
-        console.log('new', newProductsData)
+        console.log(res.data)
       })
-      .catch((err) => console.log(err))
+
+    // apiPost('products', formData)
+    //   .then((res) => {
+    //     const newProductsData = [res.data, ...products]
+    //     console.log('res', res.data)
+    //     setProducts(newProductsData)
+    //     setOnAdd(false)
+    //     console.log('new', newProductsData)
+    //   })
+    //   .catch((err) => console.log(err))
   }
 
   const handleImage = (file) => {
@@ -143,12 +162,12 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
       <TableCell align='center'>
         <IconButton
           type='submit'
-          onClick={onAddSubmit}
+          onClick={(e) => onAddSubmit(e)}
           // disabled={disable}
         >
           <CheckIcon
             fontSize='large'
-            color={disable ? 'disabled' : 'primary'}
+            // color={disable ? 'disabled' : 'primary'}
           />
         </IconButton>
         <IconButton

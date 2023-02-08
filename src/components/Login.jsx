@@ -3,6 +3,7 @@ import { Avatar, Button, Checkbox, Grid, Link, Paper, TextField, Typography } fr
 import FormControlLabel from '@mui/material/FormControlLabel';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useState } from "react";
+import { apiPost } from './services';
 
 const Login = () => {
   const [inputs, setInputs] = useState({})
@@ -23,10 +24,10 @@ const Login = () => {
     e.preventDefault()
     console.log('inputs',inputs)
 
-    axios.post('https://app.spiritx.co.nz/api/login', inputs)
+    apiPost('login', inputs)
       .then(res => {
         console.log(res)
-        localStorage.setItem('react-demo-token', res.data.token.token)
+        localStorage.setItem('react-demo-token', res.data.token)
         localStorage.setItem('react-demo-user', JSON.stringify(res.data.user))
 
         setTimeout(() => {

@@ -44,9 +44,9 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) => (
+        {headCells.map((headCell, index) => (
           <TableCell
-            key={headCell.id}
+            key={index}
             align='center'
             sortDirection={orderBy === headCell.id ? order : false}
           >
