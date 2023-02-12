@@ -23,28 +23,27 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
     handleImage(imgFile)
   }
 
-  let formData = new FormData()
+  
 
   const handleAddFormChange = (e) => {
     e.preventDefault()
 
-    // const fieldName = e.target.getAttribute('name')
+    const fieldName = e.target.getAttribute('name')
     const fieldValue = e.target.value
     console.log('fieldname', e)
     console.log('fieldValue', fieldValue)
 
-    // const newFormDate = { ...addFormData }
-    // newFormDate[fieldName] = fieldValue
+    const newFormDate = { ...addFormData }
+    newFormDate[fieldName] = fieldValue
 
-    const newFormDate = {
-      [e.target.name]: fieldValue,
-      ...prevState
-    }
+  
     console.log('newFormData', newFormDate)
     setAddFormData(newFormDate)
   }
 
+  let formData = new FormData()
   const handleAddFormSubmit = (e) => {
+    
     e.preventDefault()
 
     const newProduct = {
@@ -55,15 +54,19 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
     }
 
     const newProducts = [newProduct, ...products]
-    console.log(newProduct)
+    console.log('newProduct',newProduct)
     setProducts(newProducts)
     setOnAdd()
   }
 
   const onAddSubmit = (e) => {
     e.preventDefault()
-    formData.append('name', addFormData.title)
-    addFormData.description && formData.append('slug', addFormData.description)
+    formData.append('title', addFormData.title)
+    addFormData.description &&
+      formData.append(
+        'description',
+        addFormData.description
+      )
     formData.append('price', addFormData.price)
     // formData.append('category_id', 99)
     image && formData.append('product_image', image)
@@ -85,8 +88,12 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
         config
       )
       .then((res) => {
-        console.log(res.data)
+        const newProductsData = [res.data, ...products]
+        console.log('res', res.data)
+        setProducts(newProductsData)
+        setOnAdd(false)
       })
+      .catch((err) => console.log(err))
 
     // apiPost('products', formData)
     //   .then((res) => {
@@ -102,7 +109,7 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
   const handleImage = (file) => {
     console.log('imageFile', file)
     setImage(file)
-  }
+  } 
 
   // const onAddChange = () => {
   //   setDisable(false)

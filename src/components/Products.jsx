@@ -137,6 +137,7 @@ export default function EnhancedTable({ searchKeyWord }) {
       product_image: product.image
     }
     setEditFormData(formValues)
+    console.log('formValue', formValues)
   }
 
   const handleCancelClick = () => {
