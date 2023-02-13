@@ -41,7 +41,7 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
     setAddFormData(newFormDate)
   }
 
-  let formData = new FormData()
+  
   const handleAddFormSubmit = (e) => {
     
     e.preventDefault()
@@ -60,6 +60,7 @@ const AddRow = ({ products, setProducts, setOnAdd, disable, setDisable }) => {
   }
 
   const onAddSubmit = (e) => {
+    let formData = new FormData()
     e.preventDefault()
     formData.append('title', addFormData.title)
     addFormData.description &&
