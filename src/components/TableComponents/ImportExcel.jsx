@@ -1,14 +1,16 @@
 
 import UploadIcon from '@mui/icons-material/Upload'
 import * as XLSX from 'xlsx'
-import { Button, IconButton } from '@mui/material'
+import { IconButton } from '@mui/material'
 import { useState } from 'react'
+
 
 const ImportExcel = ({
   products,
   setProducts,
   setMessage
-}) => {
+}) => { 
+
   const handleRequestImport = (e) => {
     const uploadedFile = e.target.files[0]
     const fileReader = new FileReader()
@@ -35,7 +37,7 @@ const ImportExcel = ({
         SliceRows.map((pro) => pro),
         ...products
       )
-      setMessage('import-success')
+      // setMessage('import-success')
     }
   }
 

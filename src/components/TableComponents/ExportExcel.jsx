@@ -1,5 +1,4 @@
-import { Button, IconButton } from '@mui/material'
-import { Box } from '@mui/system'
+import { IconButton } from '@mui/material'
 import DownloadIcon from '@mui/icons-material/Download'
 import * as XLSX from 'xlsx'
 
@@ -11,7 +10,7 @@ const ExportExcel = ({ Products , setMessage }) => {
 
     XLSX.utils.book_append_sheet(workbook, workSheet, "Products")
 
-    XLSX.writeFile(workbook, "luxdream.xlsx")
+    XLSX.writeFile(workbook, "MyExcel.xlsx")
     
   }
 

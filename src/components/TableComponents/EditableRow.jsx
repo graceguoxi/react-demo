@@ -25,10 +25,10 @@ const EditableRow = ({
     setDisable(false)
     handleEditFormChange(e)
   }
-  const onImgChange = () => {
-    handleImageChange()
-    setDisable(false)
-  }
+  // const onImgChange = () => {
+  //   handleImageChange()
+  //   setDisable(false)
+  // }
 
   return (
     <TableRow>
@@ -61,7 +61,7 @@ const EditableRow = ({
       </TableCell>
       <TableCell align='center'>
         <IconButton
-          onClick={onImgChange}
+          // onClick={onImgChange}
           color='primary'
           aria-label='upload picture'
           component='label'
